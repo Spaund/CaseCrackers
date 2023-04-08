@@ -3,61 +3,66 @@ using UnityEngine.InputSystem;
 
 public class CharacterActions : MonoBehaviour
 {
-    private Rigidbody2D rb;
+    private Rigidbody2D _rb;
 
     private void Awake()
     {
         // Automatically get Rigidbody
         // Rigidbody2D will be used in player movement and the script won't work without it
-        rb = GetComponent<Rigidbody2D>();
+        _rb = GetComponent<Rigidbody2D>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         // Update calls
         // Create a function for each character input
         MoveUpdate();
+        JumpUpdate();
     }
     
     // Move --------------------------------------------------------------
-    [Header("Move")] 
-    [SerializeField, Range(0f, 20f)] private float speed = 6f;
-    [SerializeField] private AnimationCurve acceleration;
-    [SerializeField, Range(0.1f, 10f)] private float accelSpeed;
-    [SerializeField] private AnimationCurve decceleration;
-    [SerializeField, Range(0.1f, 10f)] private float deccelSpeed;
+    [Header("Movement")] 
+    [SerializeField, Range(1f, 80f)] private float movementAcceleration = 50f;
+    [SerializeField, Range(1f, 25f)] private float maxMoveSpeed = 12f;
+    [SerializeField, Range(0f, 50f)] private float groundLinearDrag = 10f;
+    [SerializeField, Range(0f, 1f)] private float dragThreshold = 0.4f;
 
-    private float direction;
-    private float accelTime;
-    private float deccelTime;
-    private bool isFacingRight = true;
+    private float _direction;
+    private bool _facingRight = true;
+    private bool ChangingDirection => (_rb.velocity.x > 0f && _direction < 0f) || (_rb.velocity.x < 0f && _direction > 0f);
+    
     public void Move(InputAction.CallbackContext action)
     {
-        // Set time variables of curves to create acceleration
-        if (action.performed) accelTime = 0;
-        if (action.canceled) deccelTime = 0;
-        
-        // Reads input value from the controller/keyboard
-        direction = action.ReadValue<Vector2>().x;
+        // This gets the Vector2D input of the Unity Input System
+        // Stores only x value as we only need the x value
+        _direction = action.ReadValue<Vector2>().x;
     }
 
     private void MoveUpdate()
     {
-        rb.velocity = new Vector2(
-            x: direction * speed * acceleration.Evaluate(accelTime) + transform.localScale.x * speed * decceleration.Evaluate(deccelTime) * acceleration.Evaluate(accelTime), 
-            y: rb.velocity.y);
+        // Adds movement using forces
+        _rb.AddForce(new Vector2(_direction * movementAcceleration, 0f));
 
-        accelTime += Time.deltaTime * accelSpeed;
-        deccelTime += Time.deltaTime * deccelSpeed;
+        // Clamps velocity if higher than move speed
+        if (Mathf.Abs(_rb.velocity.x) > maxMoveSpeed)
+            _rb.velocity = new Vector2(Mathf.Sign(_rb.velocity.x) * maxMoveSpeed, _rb.velocity.y);
+
+        // Adds drag to decelerate the character
+        if (IsGrounded())
+            // If player is grounded, applies ground drag (declared in Move)
+            _rb.drag = Mathf.Abs(_direction) < dragThreshold || ChangingDirection ? groundLinearDrag : 0f;
+        else if (!IsGrounded())
+            // If player is not grounded, applies air drag (declared in Jump)
+            _rb.drag = airLinearDrag;
         
-        // Flips the sprite to face the direction the character is moving
-        if (isFacingRight && direction < 0f || !isFacingRight && direction > 0f)
+        // Flips the sprite to face the _direction the character is moving
+        if (_facingRight && _direction < 0f || !_facingRight && _direction > 0f)
             Flip();
     }
     
     private void Flip()
     {
-        isFacingRight = !isFacingRight;
+        _facingRight = !_facingRight;
         var t = transform;
         Vector3 localScale = t.localScale;
         localScale.x *= -1f;
@@ -66,32 +71,48 @@ public class CharacterActions : MonoBehaviour
     
     // Jump --------------------------------------------------------------
     [Header("Jump")]
-    [SerializeField] private Transform groundCheck;
-    [SerializeField] private LayerMask groundLayer;
-    [SerializeField, Range(0f, 0.5f)] private float groundDistance = 0.2f;
     [SerializeField, Range(0f, 50f)] private float jumpPower = 16f;
-    [SerializeField, Range(1f, 0f)] private float jumpDamp = 0.5f;
+    [SerializeField, Range(0f, 6f)] private float airLinearDrag = 2.5f;
+    [SerializeField, Range(1f, 10f)] private float fallMultiplier = 2.5f;
+    [SerializeField, Range(1f, 0f)] private float smallJumpDamp = 0.5f;
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField, Range(0f, 1.5f)] private float raycastLenght = 0.2f;
+    [SerializeField] private bool drawGizmos;
     
     public void Jump(InputAction.CallbackContext action)
     {
-        // Jump changes directly the vertical velocity of the character
-        // It's not the most accurate way but it will work for now
-        if (action.performed && IsGrounded(groundDistance))
+        if (action.performed && IsGrounded())
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpPower);
+            _rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
         }
-        if (action.canceled && rb.velocity.y > 0f)
+        if (action.canceled && _rb.velocity.y > 0f)
         {
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * jumpDamp);
+            var vel = _rb.velocity;
+            vel = new Vector2(vel.x, vel.y * smallJumpDamp);
+            _rb.velocity = vel;
         }
     }
+
+    private void JumpUpdate()
+    {
+        if (_rb.velocity.y < 0)
+            _rb.velocity += Vector2.up * (Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime);
+    }
     
-    private bool IsGrounded(float distance)
+    private bool IsGrounded()
     {
         // Checks if the character is touching the ground
-        return Physics2D.OverlapCircle(groundCheck.position, distance, groundLayer);
+        return Physics2D.Raycast(transform.position * raycastLenght, Vector2.down, raycastLenght, groundLayer);
     }
-    
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        if (drawGizmos)
+            // Draw gizmos for Jump function
+            Gizmos.DrawLine(transform.position, transform.position + Vector3.down * raycastLenght);
+    }
+
     // Abilities ---------------------------------------------------------
     [Header("Player Ability")] 
     [SerializeField] private bool activateAbility;
