@@ -87,6 +87,7 @@ public class CharacterActions : MonoBehaviour
         }
         if (action.canceled && _rb.velocity.y > 0f)
         {
+            // Makes the character make a small jump if the button is released quickly
             var vel = _rb.velocity;
             vel = new Vector2(vel.x, vel.y * smallJumpDamp);
             _rb.velocity = vel;
@@ -95,6 +96,7 @@ public class CharacterActions : MonoBehaviour
 
     private void JumpUpdate()
     {
+        // Makes the character fall faster
         if (_rb.velocity.y < 0)
             _rb.velocity += Vector2.up * (Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime);
     }
