@@ -1,12 +1,5 @@
 {
   "dependencies": {
-    "com.cratesmith.assetui": {
-      "version": "https://github.com/Cratesmith/Cratesmith.AssetUI.git",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "cfcde2d6cc694e631290a7110c9bf26ce2452f66"
-    },
     "com.unity.2d.animation": {
       "version": "9.0.1",
       "depth": 1,
@@ -98,11 +91,13 @@
       },
       "url": "https://packages.unity.com"
     },
-    "com.unity.collab-proxy": {
-      "version": "2.0.3",
+    "com.unity.cinemachine": {
+      "version": "2.9.5",
       "depth": 0,
       "source": "registry",
-      "dependencies": {},
+      "dependencies": {
+        "com.unity.test-framework": "1.1.31"
+      },
       "url": "https://packages.unity.com"
     },
     "com.unity.collections": {
