@@ -4,7 +4,6 @@
     <list default="true" id="84a47501-bd1f-4fb4-b4c3-dd56be541552" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CaseCrackers/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CaseCrackers/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Components/Input/Player.inputactions" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/Input/Player.inputactions" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/CharacterActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/CharacterActions.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -85,6 +84,7 @@
       <updated>1681244843998</updated>
       <workItem from="1681244848060" duration="875000" />
       <workItem from="1681306366287" duration="1124000" />
+      <workItem from="1681314977895" duration="3116000" />
     </task>
     <servers />
   </component>
