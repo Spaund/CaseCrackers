@@ -4,12 +4,18 @@
     <list default="true" id="84a47501-bd1f-4fb4-b4c3-dd56be541552" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CaseCrackers/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CaseCrackers/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Components/Input/Player.inputactions" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/Input/Player.inputactions" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CharacterActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/CharacterActions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CharacterActions.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CharacterActions.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Abilities/BaseAbility.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -85,6 +91,8 @@
       <workItem from="1681244848060" duration="875000" />
       <workItem from="1681306366287" duration="1124000" />
       <workItem from="1681314977895" duration="3116000" />
+      <workItem from="1681405915038" duration="38000" />
+      <workItem from="1681406031596" duration="4784000" />
     </task>
     <servers />
   </component>

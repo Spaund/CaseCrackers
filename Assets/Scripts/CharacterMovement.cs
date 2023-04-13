@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Character : MonoBehaviour
+public class CharacterMovement : MonoBehaviour
 {
     // Serialized variables
     [SerializeField, Range(1f, 10f)] private float speed; // Unit: m/s
@@ -13,7 +13,8 @@ public class Character : MonoBehaviour
     private Rigidbody2D _rb;
     
     private Vector2 _direction; 
-    private Vector2 _mousePos; 
+    private Vector2 _mousePos;
+    private Vector2 _lookDir;
     private Vector2 _smoothDirection; 
     private Vector2 _smoothDirectionVelocity; 
     private Vector2 _smoothRotation; 
@@ -45,10 +46,10 @@ public class Character : MonoBehaviour
         /* CAMERA */
         // Gradually changes rotation over time making direction changes smoother
         // Uses same SmoothDamp function in MOVEMENT, but applied on an scalar rather than a vector
-        Vector2 lookDir = _mousePos - _rb.position;
+        
         _smoothRotation = Vector2.SmoothDamp(
             current: _smoothRotation, 
-            target: lookDir, 
+            target: _lookDir, 
             currentVelocity: ref _smoothRotationVelocity, 
             smoothTime: cameraAcceleration);
         // Gets angle using trigonometry between position and (0, 1)
@@ -66,6 +67,14 @@ public class Character : MonoBehaviour
     {
         // Gets Vector2D from PlayerInput Component (look)
         // Camera is used to transform unit from screen pixels to meters
-        _mousePos = _camera.ScreenToWorldPoint(input.ReadValue<Vector2>());
+        if (input.control.layout == "Vector2")
+        {
+            _mousePos = _camera.ScreenToWorldPoint(input.ReadValue<Vector2>());
+            _lookDir = _mousePos - _rb.position;
+        }
+        else if (input.control.layout == "Stick")
+        {
+            _lookDir = input.ReadValue<Vector2>();
+        }
     }
 }
